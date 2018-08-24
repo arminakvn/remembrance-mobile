@@ -1,4 +1,5 @@
 ## setup
+> with vim
 This app is written for a [*NIX](https://en.wikipedia.org/wiki/Unix-like) environment only, all commands are run in terminal.
 You need Nodejs and [npm](https://www.npmjs.com/) (Node Package Manager) for package management.     
 In Mac, you can install npm using [Homebrew](http://brew.sh/)– Install Homebrew if you don't have it from their webpage.     

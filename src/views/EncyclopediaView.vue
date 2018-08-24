@@ -7,11 +7,13 @@
     will use d3
     
  -->
-  <div id="main-items">
-            <encyclopedia-item
+  <div id="main-items" >
+        <encyclopedia-item
+        v-on:updatemstyle="metstyle()"
         v-for="item in encyclopedia"
         v-bind:encyclopedia="item"
         :key="item.id"
+        
         > </encyclopedia-item>
   </div>
 <div id="phantom-list" :style="phStyles"></div>
@@ -30,16 +32,32 @@ window['jQuery'] = window['$'] = $;
 export default {
   name: 'encyclopedia',
   props:["timeline"],
+  data(){
+    return {
+      mstyle: null
+    }
+  },
+ 
+    
+    
+  methods: {
+    metstyle: function(){
+       console.log("mstyle in encyclo view but currently is just a place holder to see how this get s called becuase the child emits an event")
+       
+       
+     }
+   
+  },
   components: {
     EncyclopediaItem,
   },
    mounted: function(){
-    const self = this;
-    console.log("home",self.encyclopedia)
+    let self = this;
+    // console.log("home",self.encyclopedia)
     let element = self.$el
-    console.log("elemnts", element);
+    // console.log("elemnts", element);
     let d3all = d3.select(element);
-    console.log(d3all)
+    // console.log(d3all)
     // d3all.style("opacity",.4)
     // let cancelScroll = this.$scrollTo(element, 4, options)
     // let d3el = d3.select("#"+self.slug_event)
@@ -49,9 +67,8 @@ export default {
     // d3el.remove("text")
     // d3el.append("text").text("")
     // d3el.text(function(){
-      // return formatedDate;
+    //   return formatedDate;
     // })
-
 
     // let t = d3.transition()
     // .duration(1750)
@@ -63,6 +80,7 @@ export default {
     // d3spotel.style("opacity",.4)
     // d3spotel.transition(t);
     // t.select("#fix"+self.encyclopedia.id).style("opacity",1)
+
 // to cancel scrolling you can call the returned function
     // cancelScroll()
   },
@@ -75,11 +93,11 @@ export default {
 
    },
    computed: {
-
+     
       phStyles: function(){
-        console.log("is phStyle",this.$parent)
+        // console.log("is phStyle",this.$parent)
         return {
-        height: `${this.$parent.items.length * 400}px`,
+        height: `${this.$parent.items.length * 500}px`,
         // position: 'relative'  
       }
         
@@ -92,20 +110,20 @@ export default {
 
       },
        encyclopedia: function (){
-            
-      const this_item = this.$parent.items.filter((value, index, array) => {
+            // console.log("this.$parent.items ",this.$parent.items, this.$parent)
+            const this_item = this.$parent.items.filter((value, index, array) => {
+              // console.log("this.$route.params.id; ",this.$route.params.id, value)
               return value.event == this.$route.params.id;
             })
-            
-            let three_items= this.$parent.items.filter((value, index, array) => {
-              return (value.id == +this_item[0].id || value.id  == (+this_item[0].id - 1) || value.id == (+this_item[0].id + 1));
-            })
-            //  return this.$parent.items;
-            three_items.forEach(function(each){
+            this.$parent.items.forEach(function(each){
               each["style_param"] = this_item[0]["id"];
             })
+            
+            // let three_items= [];
+             return this.$parent.items;
+            
               
-            return three_items;
+            // return three_items;
        },
         encyclopediaph: function (){
             

@@ -16,6 +16,9 @@ export default {
   components: {
     HomeView
   },
+  data: function(){
+    return {items:[]}
+  },
   computed:{
     r_img_bk: function(){
       return Math.sqrt(Math.pow($(window)[0].screen.availHeight,2) + Math.pow($(window)[0].screen.availWidth, 2))
@@ -30,7 +33,12 @@ export default {
    
   },
   mounted(){
-
+    var self = this;
+      // const dateArr = [];
+      d3.queue().defer(d3.csv,"data.csv").await(function(err,d){
+        self.items = d
+       
+      })
 
 
   //  let self = this;

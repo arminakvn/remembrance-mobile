@@ -1,8 +1,17 @@
 <template>
-  <div class="item" :style="itemStyle">
-    <div v-on:click="onClick" class="encyclopedia-item" >
-      <h3 class="text-date" v-bind:id="slug_event"></h3>
-      <p class="text-desc" v-bind:id="fixid">{{ encyclopedia.spot }}. <span v-html="descWithLink"></span></p>
+  <div class="item" v-bind:style="activeStyle()" >
+    <div v-on:click="onClick" class="encyclopedia-item" v-bind:style="itemWidth()" >
+      <div class="item-head" v-bind:style="headStyle()">
+        <h2 class="text-id">{{ encyclopedia.spot_id }}</h2>
+        <h1 class="text-head">{{ encyclopedia.event }}</h1>
+      </div>
+      <div class="item-body">
+        <div class="date">
+          <h3 class="text-date" v-html="formatDate"></h3>
+          <h3 class="text-year" v-html="formatYear"></h3>
+        </div>
+        <p class="text-desc" v-bind:id="fixid"><span v-html="descWithLink"></span></p>
+      </div>
         <!-- <sui-dimmer v-if="encyclopedia.event==this.$route.params.id" :active="true" :inverted="true"/>
         <sui-dimmer v-else active :inverted="true"/> -->
 
@@ -38,12 +47,29 @@ let options = {
 
 export default {
   name: 'EncyclopediaItem',
-  props: ["encyclopedia"],
+  props: ["encyclopedia","mstyle"],
   // components: {
   //   LinkElement
   // },
+  data () {
+    return {
+      // we have a local value that represents the user's selected region
+      currentSpot: null//this.$parent.currentSpot,
+    }},
+    watch: {
+  '$route.params.id': {
+    handler () {
+      this.currentSpot = this.$route.params.id;
+      // let val = 
+      let val = this.activeStyle();
+      // this.mstyle = this.activeStyle();   
+      this.$emit('updatemstyle', this.currentSpot)
+    },
+    immediate: true,
+  },
+},
    methods: {
-     sanitizeTitle: function(title) {
+    sanitizeTitle: function(title) {
       var slug = "";
       // Change to lower case
       var titleLower = title.toLowerCase();
@@ -68,11 +94,110 @@ export default {
       // console.log(this.encyclopedia.title)
       this.$router.push(this.encyclopedia.event)
     },
-    formatDater: function(date){
-      if(date.length == 4){
-        return moment(date, 'YYYY').format('YYYY');
+    activeStyle: function() {
+      // console.log("active this",this)
+      if (this.encyclopedia.event == this.currentSpot){
+        return {
+          // display: `none`,
+          '-webkit-transition': 'all 1s',/* Safari */
+          transition: 'all 1s',
+          // 'transition-delay': '0.5s',
+          'transition-timing-function': 'ease',
+          //visibility: `visible`,
+          // transition: transform ease;
+          transform: 'rotate(0deg)',
+          '-webkit-transform': 'rotate(0deg)',
+          '-o-transform': 'rotate(0deg)',
+          '-webkit-transform-origin-x': '0vw',
+          opacity: 1,
+          // top: `${this.$parent.mainItemsStyles['top']}px`,
+          // top: `10vh`,
+          top: `0vh`,
+          position: `absolute`
+        }
       } else {
-        return moment(date, 'MM/DD/YYYY').format('YYYY MMM DD');
+        if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param - 1){
+        // console.log(+this.$props.encyclopedia.id)
+        return {
+          '-webkit-transition': 'all 1s',/* Safari */
+          transition: 'all 1s',
+          'transition-delay': '0.1s',
+          'transition-timing-function': 'ease',
+          // display: `none`,
+          opacity: 0,
+          // visibility: `visible`,
+          // visibility: `hidden`,
+          // top: `-5px`,
+          top: `0vh`,
+          position: `absolute`,
+          transform: 'rotate(-180deg)',
+          '-webkit-transform': 'rotate(-180deg)',
+          '-o-transform': 'rotate(-180deg)',
+          '-webkit-transform-origin-x': '0vw'
+          // transform: 'rotate(-45deg)',
+          // '-webkit-transform': 'rotate(-45deg)',
+          // '-o-transform': 'rotate(-45deg)',
+          // '-webkit-transform-origin-x': '-15vw'
+        }
+      } else if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param + 1) {
+         return {
+          '-webkit-transition': 'all 1s',/* Safari */
+          transition: 'all 1s',
+          'transition-delay': '0.1s',
+          'transition-timing-function': 'ease',
+          // display: `none`,
+          opacity: 0,
+          // visibility: `visible`,
+          // visibility: `hidden`,
+          // top: `${this.$parent.mainItemsStyles['top']}px`,
+          // top: `25vh`,
+          top: `0vh`,
+          position: `absolute`,
+          transform: 'rotate(180deg)',
+          '-webkit-transform': 'rotate(180deg)',
+          '-o-transform': 'rotate(180deg)',
+          '-webkit-transform-origin-x': '0vw'
+          // transform: 'rotate(45deg)',
+          // '-webkit-transform': 'rotate(45deg)',
+          // '-o-transform': 'rotate(45deg)',
+          // '-webkit-transform-origin-x': '-10vw'
+        }
+      }
+
+      else {
+        return {
+          // '-webkit-transition': 'all 1s',/* Safari */
+          // transition: 'all 1s',
+          // 'transition-timing-function': 'ease',
+          // display: `none`,
+          opacity: 0,
+          // visibility: `hidden`,
+          // top: `${this.$parent.mainItemsStyles['top']}px`,
+          // top: `25vh`,
+          top: `0vh`,
+          transform: 'rotate(180deg)',
+          '-webkit-transform': 'rotate(180deg)',
+          '-o-transform': 'rotate(180deg)',
+          '-webkit-transform-origin-x': '0vw'
+        }
+      }
+        
+      }
+    },
+    itemWidth: function() {
+      let r_img = this.$parent.$parent.$parent.r_img;
+      console.log(r_img);
+      return {
+        width: `${r_img}px`
+      }
+    },
+    headStyle: function() {
+      let r_img = this.$parent.$parent.$parent.r_img;
+      let style = this.$parent.$parent.fixStyle;
+      let top_offset = parseInt(style.top, 10)-13;
+      return {
+        'margin-top': `${top_offset}px`,
+        height: `${r_img}px`
       }
     }
   },
@@ -85,12 +210,12 @@ export default {
       var slug = this.sanitizeTitle(this.$props.encyclopedia.spot);
       return slug;
     },
-    id: function (){
-      return this.encyclopedia.id
-    },
+    // id: function (){
+    //   return this.encyclopedia.id
+    // },
 
     fixid: function (){
-      return "fix"+this.encyclopedia.id
+      return "fix"+this.encyclopedia.id;
     },
     descWithLink: function() {
       if (this.$props.encyclopedia.description.indexOf(this.$props.encyclopedia.link) > 0){
@@ -104,35 +229,57 @@ export default {
       }
     },
     formatDate: function(){
-      if(this.$props.encyclopedia.date.length == 4){
-        return moment(this.$props.encyclopedia.date, 'YYYY').format('YYYY');
-      } else {
-        return moment(this.$props.encyclopedia.date, 'MM/DD/YYYY').format('YYYY MMM DD');
-      }
+      return moment(this.$props.encyclopedia.date, 'MM/DD/YYYY').format('MMM DD');
     },
-    itemStyle: function() {
-      console.log(this.$props.encyclopedia.id, this.$props.encyclopedia.style_param)
-      if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param - 1){
-        return {
-          // top: `0px`,
-          // position: `absolute`
-        }
-      } else if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param + 1) {
-         return {
-          // top: `${this.$parent.mainItemsStyles['top']}px`,
-          // position: `absolute`
-        }
-      } else {
-        return {
-          // top: `${this.$parent.mainItemsStyles['top'] / 2}px`,
-          // position: `absolute`
-        }
-      }
-    }
+    formatYear: function(){
+      return moment(this.$props.encyclopedia.date, 'MM/DD/YYYY').format('YYYY');
+    },
+    // itemStyle: function() {
+    //   // console.log(this.$props.encyclopedia.id, this.$props.encyclopedia.style_param)
+    //   if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param - 1){
+    //     // console.log(+this.$props.encyclopedia.id)
+    //     return {
+    //       // display: `none`,
+    //       visibility: `hidden`,
+    //       // top: `0px`,
+    //       top: `-100vh`,
+    //       position: `absolute`
+    //     }
+    //   } else if (+this.$props.encyclopedia.id == +this.$props.encyclopedia.style_param + 1) {
+    //      return {
+    //       // display: `none`,
+    //       visibility: `hidden`,
+    //       // top: `${this.$parent.mainItemsStyles['top']}px`,
+    //       top: `100vh`,
+    //       position: `absolute`
+    //     }
+    //   } else {
+    //     return {
+    //       // display: `block`,
+    //       visibility: `visible`,
+    //       // top: `${this.$parent.mainItemsStyles['top'] / 2}px`,
+    //       top: `0vh`,
+    //       position: `absolute`
+    //     }
+    //   }
+    // }
   },
   mounted: function(){
+    let self = this;
+
+
+
+    // this.currentSpot = this.$route.params.id
+    this.$nextTick(function () {
+      self.$parent.$parent.appendTimeline();
+      // console.log(self.$route.params.id);
+      self.$parent.$parent.rotateTimeline(self.$route.params.id);
+      //  this.mstyle = this.activeStyle();
+
+      
+    })
     // const self = this;
-    // // console.log(self)
+    // console.log(self);
     // let element = self.$el
     // let cancelScroll = this.$scrollTo(element, 4, options)
     // let d3el = d3.select("#"+self.slug_event)
@@ -179,10 +326,9 @@ export default {
   display: inline-block;
   margin: 0 10px;
 } */
-a {
-  color: #42b983;
+.item {
+  opacity: 0;
 }
-
 .snap-item{
   /* -webkit-scroll-snap-coordinate: 0vw -10vh;
   -ms-scroll-snap-coordinate: 0vw -10vh;
@@ -190,33 +336,80 @@ a {
 }
 
 .encyclopedia-item{
-  padding: 20px 20px 20px 60px;
+  /* padding: 20px 60px 20px 20px; */
+  padding-left: 20px;
+  width: 50vh;
+  height: 100vh;
+}
+
+.item-head{
+  /*position: absolute;
+  top: 0vh;
+  height: 50vh;*/
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-right: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.item-body{
+ /* position: absolute;
+  top: 50vh;*/
+  padding-right: 20px;
+}
+
+.text-id{
+  /*align-self: flex-end;*/
+  margin-bottom: 0px;
+  text-transform: lowercase;
+  font-size: 20px;
+  /*padding-bottom: 20px;*/
+}
+
+.text-head{
+  /*align-self: flex-end;*/
+  font-size: 34px;
+  letter-spacing: 2px;
+  text-transform: lowercase;
+  line-height: 1;
+  margin-top: 0px;
+}
+
+.date{
+  width: 100%;
+  display: inline-block;
 }
 
 .text-date{
-  font-size: 24px;
-}
-
-.text-desc{
-
-}
-
-.text-date{
-  font-family: 'Adobe Caslon Pro', serif;
+  float: left;
+  text-align: left;
+  margin-bottom: 0px;
+  font-size: 20px;
+  font-weight: normal;
+  text-transform: uppercase;
+  /* font-family: 'Adobe Caslon Pro', serif;
   font-size: 18px;
   margin-top: 0px;
-  margin-bottom: 2px;
+  margin-bottom: 2px; */
+}
+
+.text-year{
+  float: right;
+  text-align: right;
+  margin-top: 0px;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 p{
-  font-family: sans-serif;
-  font-size: 18px;
+  width: 90%;
+  display: inline-block;
+  /* font-family: sans-serif; */
+  font-size: 20px;
   line-height: 1.2;
   margin-top: 2px;
   margin-bottom: 0px;
 }
-
-/* .text-loc{
-  font-weight: bolder;
-} */
 </style>

@@ -30,10 +30,20 @@ body{
 }
 
 @font-face{
+  font-family: 'CaslonSC';
+  src: url('assets/fonts/caslon.otf') format('opentype');
+}
+
+@font-face{
   font-family: 'Trade';
   src: url('assets/fonts/trade.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 700;
+  font-weight: normal;
+}
+
+@font-face{
+  font-family: 'Trade';
+  src: url('assets/fonts/trade-condensed.ttf') format('truetype');
+  font-weight: bold;
 }
 
 html{
@@ -58,7 +68,7 @@ html{
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
-  color: #2c3e50;
+  /* color: #2c3e50; */
   
   scroll-snap-destination: 0vw 0vh;
   -webkit-scroll-snap-type: proximity;
@@ -77,7 +87,6 @@ html{
   right: 0;
   height: 100vh;
   /* width: 100vw; */
-background: url("./assets/alluminium.jpeg"); 
   color: #fff; 
   background-attachment: fixed;
   /* background-size:50%; */
@@ -95,14 +104,33 @@ background: url("./assets/alluminium.jpeg");
   z-index: 9999;
 
 }
+#app h1{
+  font-family: 'CaslonSC';
+  color: #fff;
+  font-weight: normal;
+}
+
+#app h2{
+  font-family: 'CaslonSC';
+  color: #fff;
+  font-weight: normal;
+}
+
 #app h3{
-  font-family: 'PlayfairSC';
+  font-family: 'Trade';
+  color: #000;
 }
 
 #app p{
   font-family: 'Trade';
-  font-size: 20px;
+  color: #fff;
 }
+
+#app a {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .home {
   /* overflow: hidden; */
   /* z-index: 9999; */
@@ -149,23 +177,40 @@ background: url("./assets/alluminium.jpeg");
   top: .18vh;
   left: -50vw;
   z-index: -1999;
-  opacity: .2;
-    filter: sepia(100%) saturate(300%) brightness(0%) hue-rotate(180deg);
-    
+  opacity: 0.8;
+  -webkit-filter: blur(.1px); /* Safari 6.0 - 9.0 */
+  filter: blur(.1px);
+  filter: /*sepia(30%) saturate(100%)*/ brightness(75%) /*hue-rotate(180deg)*/;
+  
+  
+  
 }
 
-.backgrear-img { 
+svg {
+  position: fixed; 
+  height: 100vh;
+  width: 100vw;
+}
+
+.backgear-cr {
+  fill: #333;
+  opacity: .25;
+}
+
+.backgear-img { 
   position: fixed; 
   /* width: 15%; */
   /* height: auto;  */
   width: auto;
   height: 260vh;
+  opacity: .85;
   /* width: 400px; */
   top: .18vh;
   left: -50vw;
   z-index: -5999;
-  -webkit-filter: blur(10px); /* Safari 6.0 - 9.0 */
-    filter: blur(10px);
+  /*filter: sepia(10%) saturate(100%) brightness(10%) ;*/
+  -webkit-filter: blur(4px); /* Safari 6.0 - 9.0 */
+    filter: blur(4px);
 }
 
 
